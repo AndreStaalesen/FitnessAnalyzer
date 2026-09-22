@@ -9,16 +9,19 @@ for obs in observations: print(obs)
 
 from models import Observation
 test_obs = Observation(**observations[0])
-print("\nFirst observation valid?", test_obs.is_valid())
-print("Heart rate via property:", test_obs.heart_rate)
-print("Skin response via property:", test_obs.skin_response)
+
 
 
 
 
 from models import Participant 
 test_participant = Participant(**profile) 
-print("\nBaseline HR:", test_participant.baseline_heart_rate) 
-print("Difference for first observation:", test_participant.heart_rate_difference(observations[0]["heart_rate"]))
 
 
+
+
+from models import Session
+quick_session = Session.from_generator("P001", "recovery", seed=7, number_of_windows=12) 
+print("\nClassification:", quick_session.classify()) 
+print("Valid:", quick_session.valid_observation_count, "/", quick_session.total_observations) 
+print("Avg HR:", quick_session.average_heart_rate(), " Avg activity:", quick_session.average_activity_level())
