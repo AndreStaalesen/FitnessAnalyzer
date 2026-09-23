@@ -6,8 +6,6 @@ def test_valid_observation_is_accepted():
     assert obs.is_valid() is True 
     print("PASS: valid observation accepted")
 
-
-
 def test_invalid_observation_is_rejected(): 
     missing_hr = Observation(timestamp=0, heart_rate=None, skin_response=1.5, temperature=32.0, activity_level=0.3, signal_quality=0.9) 
     impossible_hr = Observation(timestamp=1, heart_rate=300, skin_response=1.5, temperature=32.0, activity_level=0.3, signal_quality=0.9) 
@@ -18,7 +16,6 @@ def test_invalid_observation_is_rejected():
     assert bad_activity.is_valid() is False 
     assert low_signal.is_valid() is False 
     print("PASS: invalid observations rejected")
-
 
 def test_participant_heart_rate_difference(): 
     participant = Participant(participant_id="TEST", baseline_heart_rate=60, baseline_skin_response=1.5, baseline_temperature=32.0) 

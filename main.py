@@ -2,7 +2,6 @@ from models import Session, SessionReport
 from sample_data import SCENARIOS 
 from analysis_utils import describe_classification, print_divider, summarize_sessions, format_percentage
 
-
 def run_all_sessions(): 
     all_results = [] 
     for config in SCENARIOS: 
@@ -22,7 +21,6 @@ def run_all_sessions():
     print_divider("-", 40) 
     print("Overall summary across all sessions:") 
     print(summarize_sessions(all_results))
-
 
 if __name__ == "__main__":
     run_all_sessions()
