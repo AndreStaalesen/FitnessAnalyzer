@@ -63,6 +63,13 @@ class Participant:
     def heart_rate_difference(self, observed_heart_rate):
         return observed_heart_rate - self._baseline_heart_rate
 
+    def skin_response_difference(self, observed_skin_response):
+        return round(observed_skin_response - self._baseline_skin_response, 2)
+
+    def temperature_difference(self, observed_temperature): 
+        return round(observed_temperature - self._baseline_temperature, 2)
+
+    
 class Session:
     def __init__(self, participant, observations):
         self.participant = participant
@@ -92,6 +99,38 @@ class Session:
         if not valid: return None 
         total = sum(obs.activity_level for obs in valid) 
         return round(total / len(valid), 2)
+
+    def average_skin_response_difference(self): 
+        valid = self.valid_observations 
+        if not valid: return None 
+        total = sum(self.participant.skin_response_difference(obs.skin_response) for obs in valid) 
+        return round(total / len(valid), 2) 
+
+    def average_temperature_difference(self): 
+        valid = self.valid_observations 
+        if not valid: return None 
+        total = sum(self.participant.temperature_difference(obs.temperature) for obs in valid) 
+        return round(total / len(valid), 2)
+
+    def min_heart_rate(self):
+        valid = self.valid_observations 
+        if not valid: return None 
+        return min(obs.heart_rate for obs in valid) 
+
+    def max_heart_rate(self):
+        valid = self.valid_observations 
+        if not valid: return None 
+        return max(obs.heart_rate for obs in valid) 
+
+    def min_activity_level(self):
+        valid = self.valid_observations 
+        if not valid: return None 
+        return min(obs.activity_level for obs in valid) 
+
+    def max_activity_level(self):
+        valid = self.valid_observations 
+        if not valid: return None 
+        return max(obs.activity_level for obs in valid)
 
     def is_recovering(self): 
         valid = self.valid_observations 
@@ -124,15 +163,19 @@ class Session:
         else: 
             return "high_activity"
 
-    def to_dict(self):
-        return {
-            "participant_id": self.participant.participant_id,
-            "total_observations": self.total_observations,
-            "valid_observations": self.valid_observation_count,
-            "average_heart_rate": self.average_heart_rate(),
-            "average_activity_level": self.average_activity_level(),
-            "classification": self.classify(),
-        }
+    def to_dict(self): 
+        return {"participant_id": self.participant.participant_id, 
+                "total_observations": self.total_observations, 
+                "valid_observations": self.valid_observation_count, 
+                "average_heart_rate": self.average_heart_rate(), 
+                "min_heart_rate": self.min_heart_rate(), 
+                "max_heart_rate": self.max_heart_rate(), 
+                "average_activity_level": self.average_activity_level(), 
+                "min_activity_level": self.min_activity_level(), 
+                "max_activity_level": self.max_activity_level(), 
+                "average_skin_response_difference": self.average_skin_response_difference(), 
+                "average_temperature_difference": self.average_temperature_difference(), 
+                "classification": self.classify(), }
 
     @classmethod
     def from_generator(cls, participant_id, scenario, seed=None, number_of_windows=12):
@@ -160,6 +203,10 @@ class SessionReport:
         print(f"Observations used: {s.valid_observation_count}/{s.total_observations}")
         print(f"Average Heart Rate: {s.average_heart_rate()}")
         print(f"Average Activity Level: {s.average_activity_level()}")
+        print(f"Heart rate range: {s.min_heart_rate()} - {s.max_heart_rate()}")
+        print(f"Activity level range: {s.min_activity_level()} - {s.max_activity_level()}")
+        print(f"Avg skin response vs baseline: {s.average_skin_response_difference()}")
+        print(f"Avg temperature vs baseline: {s.average_temperature_difference()}")
         print(f"Classification: {s.classify()}")
         print("="*40)
 
