@@ -1,6 +1,6 @@
 from data_generator import generate_fitness_data
 
-class Observation: #This class is used to represent a single observation, while also checking the validity of the observation. It also provides properties to access the attributes of the observation.
+class Observation:
     def __init__(self, timestamp, heart_rate, skin_response, temperature, activity_level, signal_quality):
         self.timestamp = timestamp
         self._heart_rate = heart_rate
