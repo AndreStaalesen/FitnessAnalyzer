@@ -25,3 +25,9 @@ quick_session = Session.from_generator("P001", "recovery", seed=7, number_of_win
 print("\nClassification:", quick_session.classify()) 
 print("Valid:", quick_session.valid_observation_count, "/", quick_session.total_observations) 
 print("Avg HR:", quick_session.average_heart_rate(), " Avg activity:", quick_session.average_activity_level())
+
+
+
+from models import SessionReport 
+report = SessionReport(quick_session) 
+report.print_report()

@@ -141,3 +141,21 @@ class Session:
         participant = Participant(**profile)
         observation_objects = [Observation(**obs) for obs in observations]
         return cls(participant, observation_objects)
+
+
+class SessionReport:
+    def __init__(self, session):
+        self.session = session
+
+    def print_report(self):
+        s = self.session 
+        print("="*40) 
+        print(f"Session Report for {s.participant.participant_id}") 
+        print("="*40) 
+        print(f"Observations used: {s.valid_observation_count}/{s.total_observations}")
+        print(f"Average Heart Rate: {s.average_heart_rate()}")
+        print(f"Average Activity Level: {s.average_activity_level()}")
+        print(f"Classification: {s.classify()}")
+        print("="*40)
+
+        
