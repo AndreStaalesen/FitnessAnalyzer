@@ -31,3 +31,11 @@ print("Avg HR:", quick_session.average_heart_rate(), " Avg activity:", quick_ses
 from models import SessionReport 
 report = SessionReport(quick_session) 
 report.print_report()
+
+
+
+
+
+
+print("\nAs a dict:") 
+print(quick_session.to_dict())

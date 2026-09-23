@@ -104,12 +104,10 @@ class Session:
         second_avg_hr = sum(o.heart_rate for o in second_half) / len(second_half) 
         first_avg_activity = sum(o.activity_level for o in first_half) / len(first_half) 
         second_avg_activity = sum(o.activity_level for o in second_half) / len(second_half) 
-        hr_declining = second_avg_hr < first_avg_hr - 3 
-        activity_declining = second_avg_activity < first_avg_activity - 0.05 
-        still_elevated = self.participant.heart_rate_difference(second_avg_hr) > 5 
+        hr_declining = second_avg_hr < first_avg_hr - 15 
+        activity_declining = second_avg_activity < first_avg_activity - 0.15 
+        still_elevated = self.participant.heart_rate_difference(second_avg_hr) > 10 
         return hr_declining and activity_declining and still_elevated
-
-
 
 
     def classify(self): 
@@ -126,6 +124,18 @@ class Session:
             return "moderate_activity"
         else: 
             return "high_activity"
+
+    def to_dict(self):
+        return {
+            "participant_id": self.participant.participant_id,
+            "total_observations": self.total_observations,
+            "valid_observations": self.valid_observation_count,
+            "average_heart_rate": self.average_heart_rate(),
+            "average_activity_level": self.average_activity_level(),
+            "classification": self.classify(),
+        }
+
+
 
 
 
@@ -158,4 +168,3 @@ class SessionReport:
         print(f"Classification: {s.classify()}")
         print("="*40)
 
-        
