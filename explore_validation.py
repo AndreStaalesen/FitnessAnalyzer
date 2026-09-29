@@ -1,18 +1,18 @@
-import csv
-from fitness_analyzer.validation import validate_session_record, InvalidIdentifierError, InvalidRecordError
+from fitness_analyzer.loader import load_participants, load_sessions, build_sessions
 
-known_ids = {"P001", "P002", "P003"}
+participants = load_participants("data/participants.csv")
+print(f"Loaded {len(participants)} participants")
 
-with open("data/fitness_sessions_invalid.csv", encoding="utf-8", newline="") as f:
-    reader = csv.DictReader(f)
-    rows = list(reader)
+accepted, rejected = load_sessions("data/fitness_sessions.csv", set(participants.keys()))
+print(f"\nfitness_sessions.csv: {len(accepted)} accepted, {len(rejected)} rejected")
 
-test_rows = [rows[0], rows[1], rows[6]]
+accepted_bad, rejected_bad = load_sessions("data/fitness_sessions_invalid.csv", set(participants.keys()))
+print(f"fitness_sessions_invalid.csv: {len(accepted_bad)} accepted, {len(rejected_bad)} rejected")
+print("\nRejected rows from the invalid file:")
+for reason in rejected_bad:
+    print(" -", reason)
 
-for i, row in enumerate(test_rows, start=1):
-    try:
-        result = validate_session_record(row, i, "fitness_sessions_invalid.csv", known_ids)
-        print("ACCEPTED:", result)
-    except (InvalidIdentifierError, InvalidRecordError) as e:
-        print("REJECTED:", e)
-        
+sessions = build_sessions(accepted, participants)
+print(f"\nBuilt {len(sessions)} sessions from the valid file")
+for session in sessions:
+    print(f"{session.participant.participant_id}: {session.classify()} ({session.valid_observation_count}/{session.total_observations} valid)")

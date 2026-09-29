@@ -47,8 +47,15 @@ def _parse_number(value, field, row_number, source_file, as_type):
 
 
 def validate_session_record(row, row_number, source_file, known_participant_ids):
-    session_id = validate_session_id(row.get("session_id", ""))
-    participant_id = validate_participant_id(row.get("participant_id", ""))
+    try:
+        session_id = validate_session_id(row.get("session_id", ""))
+    except InvalidIdentifierError as e:
+        raise InvalidIdentifierError(f"{source_file}, row {row_number}, field 'session_id': {e}")
+
+    try:
+        participant_id = validate_participant_id(row.get("participant_id", ""))
+    except InvalidIdentifierError as e:
+        raise InvalidIdentifierError(f"{source_file}, row {row_number}, field 'participant_id': {e}")
 
     if participant_id not in known_participant_ids:
         raise InvalidRecordError(
