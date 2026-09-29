@@ -1,21 +1,18 @@
-from fitness_analyzer.validation import validate_participant_id, validate_session_id, InvalidIdentifierError
+import csv
+from fitness_analyzer.validation import validate_session_record, InvalidIdentifierError, InvalidRecordError
 
-good_participant = "P001"
-bad_participant = "001"
-good_session = "FIT-2026-001"
-bad_session = "FIT-26-102"
+known_ids = {"P001", "P002", "P003"}
 
-print(validate_participant_id(good_participant), "is valid")
+with open("data/fitness_sessions_invalid.csv", encoding="utf-8", newline="") as f:
+    reader = csv.DictReader(f)
+    rows = list(reader)
 
-try:
-    validate_participant_id(bad_participant)
-except InvalidIdentifierError as e:
-    print("Caught error:", e)
+test_rows = [rows[0], rows[1], rows[6]]
 
-print(validate_session_id(good_session), "is valid")
-
-try:
-    validate_session_id(bad_session)
-except InvalidIdentifierError as e:
-    print("Caught error:", e)
-    
+for i, row in enumerate(test_rows, start=1):
+    try:
+        result = validate_session_record(row, i, "fitness_sessions_invalid.csv", known_ids)
+        print("ACCEPTED:", result)
+    except (InvalidIdentifierError, InvalidRecordError) as e:
+        print("REJECTED:", e)
+        
