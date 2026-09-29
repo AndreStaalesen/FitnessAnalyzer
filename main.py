@@ -1,6 +1,6 @@
-from models import Session, SessionReport 
+from fitness_analyzer.models import Session, SessionReport
 from sample_data import SCENARIOS 
-from analysis_utils import describe_classification, print_divider, summarize_sessions, format_percentage
+from fitness_analyzer.analysis_utils import describe_classification, print_divider, summarize_sessions, format_percentage
 
 def run_all_sessions(): 
     all_results = [] 

@@ -1,4 +1,4 @@
-from models import Observation, Participant, Session
+from fitness_analyzer.models import Observation, Participant, Session
 
 def test_valid_observation_is_accepted(): 
     obs = Observation(timestamp=0, heart_rate=70, 
