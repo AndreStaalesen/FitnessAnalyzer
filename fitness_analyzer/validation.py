@@ -47,6 +47,10 @@ def _parse_number(value, field, row_number, source_file, as_type):
 
 
 def validate_session_record(row, row_number, source_file, known_participant_ids):
+    if None in row:
+        raise InvalidRecordError(
+            f"{source_file}, row {row_number}: row has more fields than expected"
+        )
     try:
         session_id = validate_session_id(row.get("session_id", ""))
     except InvalidIdentifierError as e:

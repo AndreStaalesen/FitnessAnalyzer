@@ -100,6 +100,25 @@ def test_missing_file_raises_file_not_found():
     except FileNotFoundError:
         print("PASS: missing file correctly raises FileNotFoundError")
 
+def test_signal_quality_boundary_value():
+    obs_at_threshold = Observation(timestamp=0, heart_rate=70, skin_response=1.0, temperature=32.0, activity_level=0.3, signal_quality=0.5)
+    obs_just_below_threshold = Observation(timestamp=1, heart_rate=70, skin_response=1.0, temperature=32.0, activity_level=0.3, signal_quality=0.49)
+    assert obs_at_threshold.is_valid() is True
+    assert obs_just_below_threshold.is_valid() is False
+    print("PASS: signal quality boundary (0.5) handled correctly")
+
+
+def test_heart_rate_boundary_values():
+    obs_min = Observation(timestamp=0, heart_rate=30, skin_response=1.0, temperature=32.0, activity_level=0.3, signal_quality=0.9)
+    obs_just_below_min = Observation(timestamp=1, heart_rate=29, skin_response=1.0, temperature=32.0, activity_level=0.3, signal_quality=0.9)
+    obs_max = Observation(timestamp=2, heart_rate=220, skin_response=1.0, temperature=32.0, activity_level=0.3, signal_quality=0.9)
+    obs_just_above_max = Observation(timestamp=3, heart_rate=221, skin_response=1.0, temperature=32.0, activity_level=0.3, signal_quality=0.9)
+    assert obs_min.is_valid() is True
+    assert obs_just_below_min.is_valid() is False
+    assert obs_max.is_valid() is True
+    assert obs_just_above_max.is_valid() is False
+    print("PASS: heart rate boundary values (30 and 220) handled correctly")
+
 if __name__ == "__main__":
     test_valid_observation_is_accepted()
     test_invalid_observation_is_rejected()
@@ -113,5 +132,6 @@ if __name__ == "__main__":
     test_load_participants_from_real_file()
     test_load_sessions_counts_match_expected()
     test_missing_file_raises_file_not_found()
+    test_signal_quality_boundary_value()
+    test_heart_rate_boundary_values()
     print("\nAll tests passed.")
-    

@@ -45,7 +45,10 @@ def run(profiles_path, sessions_path, output_dir):
     print(f"Accepted rows: {len(accepted)}")
     print(f"Rejected rows: {len(rejected)}")
     print(f"Sessions processed: {len(sessions)}")
-    print(f"Reports written to: {output_dir}/")
+    print(f"Reports written to {output_dir}/:")
+    print("- analysis_summary.csv")
+    print("- analysis_report.txt")
+    print("- rejected_records.txt")
 
 
 if __name__ == "__main__":
@@ -56,4 +59,3 @@ if __name__ == "__main__":
         print(f"Error: {e}")
     except PermissionError as e:
         print(f"Error: permission denied - {e}")
-        
