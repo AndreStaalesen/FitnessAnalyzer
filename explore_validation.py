@@ -1,18 +1,25 @@
 from fitness_analyzer.loader import load_participants, load_sessions, build_sessions
+from fitness_analyzer.report_writer import (
+    ensure_output_dir,
+    write_analysis_summary,
+    write_analysis_report,
+    write_rejected_records,
+)
 
 participants = load_participants("data/participants.csv")
-print(f"Loaded {len(participants)} participants")
 
-accepted, rejected = load_sessions("data/fitness_sessions.csv", set(participants.keys()))
-print(f"\nfitness_sessions.csv: {len(accepted)} accepted, {len(rejected)} rejected")
-
+accepted_valid, rejected_valid = load_sessions("data/fitness_sessions.csv", set(participants.keys()))
 accepted_bad, rejected_bad = load_sessions("data/fitness_sessions_invalid.csv", set(participants.keys()))
-print(f"fitness_sessions_invalid.csv: {len(accepted_bad)} accepted, {len(rejected_bad)} rejected")
-print("\nRejected rows from the invalid file:")
-for reason in rejected_bad:
-    print(" -", reason)
 
-sessions = build_sessions(accepted, participants)
-print(f"\nBuilt {len(sessions)} sessions from the valid file")
-for session in sessions:
-    print(f"{session.participant.participant_id}: {session.classify()} ({session.valid_observation_count}/{session.total_observations} valid)")
+all_accepted = accepted_valid + accepted_bad
+all_rejected = rejected_valid + rejected_bad
+
+sessions = build_sessions(all_accepted, participants)
+
+ensure_output_dir("output")
+write_analysis_summary(sessions, "output")
+write_analysis_report(sessions, "output")
+write_rejected_records(all_rejected, "output")
+
+print(f"Processed {len(sessions)} sessions, {len(all_rejected)} rejected records.")
+print("Output files written to the output/ folder.")

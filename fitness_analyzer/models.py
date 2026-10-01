@@ -71,9 +71,10 @@ class Participant:
 
     
 class Session:
-    def __init__(self, participant, observations):
+    def __init__(self, participant, observations, session_id=None):
         self.participant = participant
         self._observations = observations
+        self.session_id = session_id
 
     @property
     def valid_observations(self):
@@ -163,19 +164,22 @@ class Session:
         else: 
             return "high_activity"
 
-    def to_dict(self): 
-        return {"participant_id": self.participant.participant_id, 
-                "total_observations": self.total_observations, 
-                "valid_observations": self.valid_observation_count, 
-                "average_heart_rate": self.average_heart_rate(), 
-                "min_heart_rate": self.min_heart_rate(), 
-                "max_heart_rate": self.max_heart_rate(), 
-                "average_activity_level": self.average_activity_level(), 
-                "min_activity_level": self.min_activity_level(), 
-                "max_activity_level": self.max_activity_level(), 
-                "average_skin_response_difference": self.average_skin_response_difference(), 
-                "average_temperature_difference": self.average_temperature_difference(), 
-                "classification": self.classify(), }
+    def to_dict(self):
+        return {
+            "session_id": self.session_id,
+            "participant_id": self.participant.participant_id,
+            "total_observations": self.total_observations,
+            "valid_observations": self.valid_observation_count,
+            "average_heart_rate": self.average_heart_rate(),
+            "min_heart_rate": self.min_heart_rate(),
+            "max_heart_rate": self.max_heart_rate(),
+            "average_activity_level": self.average_activity_level(),
+            "min_activity_level": self.min_activity_level(),
+            "max_activity_level": self.max_activity_level(),
+            "average_skin_response_difference": self.average_skin_response_difference(),
+            "average_temperature_difference": self.average_temperature_difference(),
+            "classification": self.classify(),
+        }
 
     @classmethod
     def from_generator(cls, participant_id, scenario, seed=None, number_of_windows=12):

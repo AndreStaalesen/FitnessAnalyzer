@@ -73,5 +73,5 @@ def build_sessions(accepted_records, participants):
             raise InvalidRecordError(
                 f"Session {session_id} references participant {data['participant_id']}, which was not loaded"
             )
-        sessions.append(Session(participant, data["observations"]))
+        sessions.append(Session(participant, data["observations"], session_id=session_id))
     return sessions
